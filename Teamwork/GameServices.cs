@@ -2,10 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-
     public class GameServices
     {
-        #region Private Variables
+        #region Variables
         private static readonly Random Rand = new Random();
         private const double LowerBoundMines = 0.15;
         private const double UpperBoundMines = 0.3;
@@ -14,7 +13,7 @@
         #region Generation Algorithm
         /// <summary>
         /// Generates a 2D char array to be used as a game field.
-        /// The Array is a square array.
+        /// The Generated array is a equilateral(square) array.
         /// </summary>
         /// <param name="size">the size of the array</param>
         /// <returns>char[,]</returns>
@@ -121,6 +120,12 @@
         #region Explosion Actions
 
         // What the fuck is even going on here?
+
+        /// <summary>
+        /// Chooses which Algorithm to use for the explosion.
+        /// </summary>
+        /// <param name="field">the field</param>
+        /// <param name="mine">the mine to explode</param>
         public static void Explode(char[,] field, Mine mine)
         {
             char mineType = field[mine.X, mine.Y];
@@ -273,7 +278,12 @@
         #endregion
 
         #region Extra actions
-        public static void ShowResults(char[,] field)
+        /// <summary>
+        /// Prints the field to the console.
+        /// This is the method used to show player the gameboard.
+        /// </summary>
+        /// <param name="field">The field to show TODO: DECOUPLE</param>
+        public static void PrintResults(char[,] field)
         {
             Console.Write("   ");
             int size = field.GetLength(0);
