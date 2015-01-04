@@ -34,10 +34,12 @@
             {
                 int mineX = Rand.Next(0, size);
                 int mineY = Rand.Next(0, size);
+                // you dont need that mine object
                 Mine newMine = new Mine(mineX, mineY);
                 int mineType = Rand.Next('1', '6');
                 field[mineX, mineY] = Convert.ToChar(mineType);
             }
+
             return field;
         }
 
