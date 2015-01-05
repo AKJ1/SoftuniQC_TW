@@ -33,10 +33,10 @@
             return size;
         }
 
-        private Mine GetMoveInput()
+        private GetMoveInput GetMoveInput()
         {
             Console.Write("Please enter coordinates: ");
-            Mine mine = GameServices.ExtractMineFromString(Console.ReadLine());
+            GetMoveInput mine = GameServices.ExtractMineFromString(Console.ReadLine());
             mine = mine ?? (mine = GetMoveInput());
             return mine;
         }
@@ -60,7 +60,7 @@
             while (GameServices.ContainsMines(gameField))
             {
                 GameServices.PrintResults(gameField);
-                Mine inputMine = GetMoveInput();
+                GetMoveInput inputMine = GetMoveInput();
                 if (GameServices.IsValidMove(gameField, inputMine.X, inputMine.Y))
                 {
                     GameServices.Explode(gameField, inputMine);

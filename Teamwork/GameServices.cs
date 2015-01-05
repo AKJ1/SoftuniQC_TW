@@ -29,13 +29,13 @@
                     field[i, j] = '-';
                 }
             }
-            List<Mine> mines = new List<Mine>();
+            List<GetMoveInput> mines = new List<GetMoveInput>();
             for (int i = 0; i < minesCount; i++)
             {
                 int mineX = Rand.Next(0, size);
                 int mineY = Rand.Next(0, size);
                 // you dont need that mine object
-                Mine newMine = new Mine(mineX, mineY);
+                GetMoveInput newMine = new GetMoveInput(mineX, mineY);
                 int mineType = Rand.Next('1', '6');
                 field[mineX, mineY] = Convert.ToChar(mineType);
             }
@@ -128,7 +128,7 @@
         /// </summary>
         /// <param name="field">the field</param>
         /// <param name="mine">the mine to explode</param>
-        public static void Explode(char[,] field, Mine mine)
+        public static void Explode(char[,] field, GetMoveInput mine)
         {
             char mineType = field[mine.X, mine.Y];
 
@@ -162,40 +162,40 @@
             }
         }
 
-        private static void ExplodeOne(char[,] field, Mine mine)
+        private static void ExplodeOne(char[,] field, GetMoveInput mine)
         {
-            Mine cornerUR = new Mine(mine.X - 1, mine.Y - 1);
-            Mine cornerUL = new Mine(mine.X - 1, mine.Y + 1);
-            Mine cornerDR = new Mine(mine.X + 1, mine.Y - 1);
-            Mine cornerDL = new Mine(mine.X + 1, mine.Y + 1);
+            GetMoveInput upperRightCorner = new GetMoveInput(mine.X - 1, mine.Y - 1);
+            GetMoveInput upperLeftCorner = new GetMoveInput(mine.X - 1, mine.Y + 1);
+            GetMoveInput downRightCorner = new GetMoveInput(mine.X + 1, mine.Y - 1);
+            GetMoveInput downLeftCorner = new GetMoveInput(mine.X + 1, mine.Y + 1);
 
             if (CheckField(field, mine.X, mine.Y))
             {
                 field[mine.X, mine.Y] = 'X';
             }
 
-            if (CheckField(field, cornerUR.X, cornerUR.Y))
+            if (CheckField(field, upperRightCorner.X, upperRightCorner.Y))
             {
-                field[cornerUR.X, cornerUR.Y] = 'X';
+                field[upperRightCorner.X, upperRightCorner.Y] = 'X';
             }
 
-            if (CheckField(field, cornerUL.X, cornerUL.Y))
+            if (CheckField(field, upperLeftCorner.X, upperLeftCorner.Y))
             {
-                field[cornerUL.X, cornerUL.Y] = 'X';
+                field[upperLeftCorner.X, upperLeftCorner.Y] = 'X';
             }
 
-            if (CheckField(field, cornerDR.X, cornerDR.Y))
+            if (CheckField(field, downRightCorner.X, downRightCorner.Y))
             {
-                field[cornerDR.X, cornerDR.Y] = 'X';
+                field[downRightCorner.X, downRightCorner.Y] = 'X';
             }
 
-            if (CheckField(field, cornerDL.X, cornerDL.Y))
+            if (CheckField(field, downLeftCorner.X, downLeftCorner.Y))
             {
-                field[cornerDL.X, cornerDL.Y] = 'X';
+                field[downLeftCorner.X, downLeftCorner.Y] = 'X';
             }
         }
 
-        private static void ExplodeTwo(char[,] field, Mine mine)
+        private static void ExplodeTwo(char[,] field, GetMoveInput mine)
         {
             for (int i = mine.X - 1; i <= mine.X+1; i++)
             {
@@ -209,13 +209,13 @@
             }
         }
 
-        private static void ExplodeThree(char[,] field, Mine mine)
+        private static void ExplodeThree(char[,] field, GetMoveInput mine)
         {
             ExplodeTwo(field, mine);
-            Mine up = new Mine(mine.X - 2, mine.Y);
-            Mine down = new Mine(mine.X + 2, mine.Y);
-            Mine left = new Mine(mine.X, mine.Y - 2);
-            Mine right = new Mine(mine.X, mine.Y + 2);
+            GetMoveInput up = new GetMoveInput(mine.X - 2, mine.Y);
+            GetMoveInput down = new GetMoveInput(mine.X + 2, mine.Y);
+            GetMoveInput left = new GetMoveInput(mine.X, mine.Y - 2);
+            GetMoveInput right = new GetMoveInput(mine.X, mine.Y + 2);
 
             if (CheckField(field, up.X, up.Y))
             {
@@ -238,21 +238,21 @@
             }
         }
 
-        private static void ExplodeFour(char[,] field, Mine mine)
+        private static void ExplodeFour(char[,] field, GetMoveInput mine)
         {
             for (int i = mine.X - 2; i <= mine.X + 2; i++)
             {
                 for (int j = mine.Y - 2; j <= mine.Y + 2; j++)
                 {
-                    bool UR = i == mine.X - 2 && j == mine.Y - 2;
-                    bool UL = i == mine.X - 2 && j == mine.Y + 2;
-                    bool DR = i == mine.X + 2 && j == mine.Y - 2;
-                    bool DL = i == mine.X + 2 && j == mine.Y + 2;
+                    bool upRight = i == mine.X - 2 && j == mine.Y - 2;
+                    bool upLeft = i == mine.X - 2 && j == mine.Y + 2;
+                    bool downRight = i == mine.X + 2 && j == mine.Y - 2;
+                    bool downLeft = i == mine.X + 2 && j == mine.Y + 2;
 
-                    if (UR) continue;
-                    if (UL) continue;
-                    if (DR) continue;
-                    if (DL) continue;
+                    if (upRight) continue;
+                    if (upLeft) continue;
+                    if (downRight) continue;
+                    if (downLeft) continue;
 
                     if (CheckField(field, i, j))
                     {
@@ -263,7 +263,7 @@
 
         }
 
-        private static void ExplodeFive(char[,] field, Mine mine)
+        private static void ExplodeFive(char[,] field, GetMoveInput mine)
         {
             for (int i = mine.X - 2; i <= mine.X + 2; i++)
             {
@@ -312,7 +312,7 @@
             }
         }
 
-        public static Mine ExtractMineFromString(string line)
+        public static GetMoveInput ExtractMineFromString(string line)
         {
             if (line == null || line.Length < 3 || !line.Contains(" "))
             {
@@ -337,7 +337,7 @@
                 return null;
             }
 
-            return new Mine(x, y);
+            return new GetMoveInput(x, y);
         }
         #endregion
     }

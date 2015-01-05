@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="Battlefield.cs" />
     <Compile Include="GameServices.cs" />
-    <Compile Include="Mine.cs" />
+    <Compile Include="GetMoveInput.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
   <ItemGroup>
