@@ -1,5 +1,0 @@
-D:\Code\KPK\Teamwork\bin\Debug\BattleField.exe
-D:\Code\KPK\Teamwork\bin\Debug\BattleField.pdb
-D:\Code\KPK\Teamwork\obj\x86\Debug\bf.csprojResolveAssemblyReference.cache
-D:\Code\KPK\Teamwork\obj\x86\Debug\BattleField.exe
-D:\Code\KPK\Teamwork\obj\x86\Debug\BattleField.pdb

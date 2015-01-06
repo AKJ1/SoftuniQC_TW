@@ -1,7 +1,7 @@
 ﻿namespace BattleField
 {
     /// <summary>
-    /// 2D location within array used to denote the presence of a mine.
+    /// A position in 2D space holding coordinates for X and Y
     /// </summary>
     public class Position2D
     {

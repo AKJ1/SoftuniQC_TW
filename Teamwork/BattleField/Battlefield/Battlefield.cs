@@ -8,20 +8,19 @@
 
         public Battlefield()
         {
-            this.gameField = null;
+
         }
 
         #region Input
         private int GetInitialInput()
         {
-            string readBuffer = Console.ReadLine();
+            string userInput = Console.ReadLine();
             int size = 0;
-
-            while (!int.TryParse(readBuffer, out size))
+            while (!int.TryParse(userInput, out size))
             {
                 Console.WriteLine("Wrong Format or number out of range.");
                 Console.Write("Input battlefield size: [Range: 1 to 10] n = ");
-                readBuffer = Console.ReadLine();
+                userInput = Console.ReadLine();
             }
             
             if ((size > 10 || size <= 0))
@@ -36,36 +35,36 @@
         private Position2D GetMoveInput()
         {
             Console.Write("Please enter coordinates: ");
-            Position2D mine = GameServices.ExtractMineFromString(Console.ReadLine());
-            mine = mine ?? (mine = GetMoveInput());
+            string userInput = Console.ReadLine();
+            Position2D mine = GameServices.ExtractMineFromString(userInput);
+            if (mine == null)
+            {
+                mine = GetMoveInput();
+            }
+
             return mine;
         }
         #endregion
 
-        #region Start
         public void Start()
         {
             Console.WriteLine(@"Welcome to ""Battle Field"" game. ");
             Console.Write("Input battlefield size: [Range: 1 to 10] n = ");
             int size = GetInitialInput();
-            gameField = GameServices.GenerateField(size);
+            this.gameField = GameServices.GenerateField(size);
             GameLoop();
         }
-        #endregion
 
-        #region Gameloop
         private void GameLoop()
         {
             int blownMines = 0;
-
-            while (GameServices.ContainsMines(gameField))
+            while (GameServices.ContainsMines(this.gameField))
             {
-                GameServices.PrintResults(gameField);
-                Position2D inputMine = GetMoveInput();
-
-                if (GameServices.IsValidMove(gameField, inputMine.X, inputMine.Y))
+                GameServices.PrintResults(this.gameField);
+                Position2D inputPosition = GetMoveInput();
+                if (GameServices.IsValidMove(this.gameField, inputPosition.X, inputPosition.Y))
                 {
-                    GameServices.Explode(gameField, inputMine);
+                    GameServices.Explode(this.gameField, inputPosition);
                     blownMines++;
                 }
                 else
@@ -73,18 +72,16 @@
                     Console.WriteLine("Invalid move!");
                 }
             }
+
             EndGame(blownMines);
         }
-        #endregion
 
-        #region End Game
         private void EndGame(int score)
         {
-            GameServices.PrintResults(gameField);
+            GameServices.PrintResults(this.gameField);
             Console.WriteLine("Game over. Detonated mines: {0}", score);
             Console.WriteLine("Press any key to exit");
             Console.ReadKey();
         }
-        #endregion
     }
 }
