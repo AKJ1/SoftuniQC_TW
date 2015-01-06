@@ -12,6 +12,20 @@
 
         #region Generation Algorithm
         /// <summary>
+        /// Returns the number of mines that need to be set on the field
+        /// </summary>
+        /// <param name="size">This sets the field's X and Y lengths</param>
+        /// <returns>int</returns>
+        private static int DetermineMineCount(int size)
+        {
+            double fields = (double)size * size;
+            int lowBound = (int)(LowerBoundMines * fields);
+            int upperBound = (int)(UpperBoundMines * fields);
+
+            return Rand.Next(lowBound, upperBound);
+        }
+
+        /// <summary>
         /// Generates a 2D char array to be used as a game field.
         /// The Generated array is a equilateral(square) array.
         /// </summary>
@@ -29,37 +43,38 @@
                     field[i, j] = '-';
                 }
             }
-            List<GetMoveInput> mines = new List<GetMoveInput>();
+
             for (int i = 0; i < minesCount; i++)
             {
                 int mineX = Rand.Next(0, size);
                 int mineY = Rand.Next(0, size);
-                // you dont need that mine object
-                GetMoveInput newMine = new GetMoveInput(mineX, mineY);
                 int mineType = Rand.Next('1', '6');
+
                 field[mineX, mineY] = Convert.ToChar(mineType);
             }
 
             return field;
         }
-
-        /// <summary>
-        /// Returns the number of mines that need to be set on the field
-        /// </summary>
-        /// <param name="size">This sets the field's X and Y lengths</param>
-        /// <returns>int</returns>
-        private static int DetermineMineCount(int size)
-        {
-            double fields = (double)size * size;
-            int lowBound = (int)(LowerBoundMines * fields);
-            int upperBound = (int)(UpperBoundMines * fields);
-
-            return Rand.Next(lowBound, upperBound);
-        }
         #endregion
 
         #region Logic Checks
+        /// <summary>
+        /// Checks a field to see whether the designated X Y coordinates exist.
+        /// </summary>
+        /// <param name="field"> 2D Char array</param>
+        /// <param name="x">X coordinate</param>
+        /// <param name="y">Y coordinate</param>
+        /// <returns>bool</returns>
+        private static bool CheckField(char[,] field, int x, int y)
+        {
+            if (x < 0 || y < 0 || x >= field.GetLength(0) || y >= field.GetLength(1))
+            {
+                return false;
+            }
 
+            return true;
+        }
+        
         /// <summary>
         /// Checks whether a move is valid or not.
         /// </summary>
@@ -73,6 +88,7 @@
             {
                 return false;
             }
+
             if (field[x, y] == 'X' || field[x, y] == '-')
             {
                 return false;
@@ -100,23 +116,6 @@
             }
             return false;
         }
-
-        /// <summary>
-        /// Checks a field to see whether the designated X Y coordinates exist.
-        /// </summary>
-        /// <param name="field"> 2D Char array</param>
-        /// <param name="x">X coordinate</param>
-        /// <param name="y">Y coordinate</param>
-        /// <returns>bool</returns>
-        private static bool CheckField(char[,] field, int x, int y)
-        {
-            if (x < 0 || y < 0 || x >= field.GetLength(0) || y >= field.GetLength(1))
-            {
-                return false;
-            }
-
-            return true;
-        }
         #endregion
 
         #region Explosion Actions
@@ -128,7 +127,7 @@
         /// </summary>
         /// <param name="field">the field</param>
         /// <param name="mine">the mine to explode</param>
-        public static void Explode(char[,] field, GetMoveInput mine)
+        public static void Explode(char[,] field, Position2D mine)
         {
             char mineType = field[mine.X, mine.Y];
 
@@ -162,12 +161,12 @@
             }
         }
 
-        private static void ExplodeOne(char[,] field, GetMoveInput mine)
+        private static void ExplodeOne(char[,] field, Position2D mine)
         {
-            GetMoveInput upperRightCorner = new GetMoveInput(mine.X - 1, mine.Y - 1);
-            GetMoveInput upperLeftCorner = new GetMoveInput(mine.X - 1, mine.Y + 1);
-            GetMoveInput downRightCorner = new GetMoveInput(mine.X + 1, mine.Y - 1);
-            GetMoveInput downLeftCorner = new GetMoveInput(mine.X + 1, mine.Y + 1);
+            Position2D upperRightCorner = new Position2D(mine.X - 1, mine.Y - 1);
+            Position2D upperLeftCorner = new Position2D(mine.X - 1, mine.Y + 1);
+            Position2D downRightCorner = new Position2D(mine.X + 1, mine.Y - 1);
+            Position2D downLeftCorner = new Position2D(mine.X + 1, mine.Y + 1);
 
             if (CheckField(field, mine.X, mine.Y))
             {
@@ -195,7 +194,7 @@
             }
         }
 
-        private static void ExplodeTwo(char[,] field, GetMoveInput mine)
+        private static void ExplodeTwo(char[,] field, Position2D mine)
         {
             for (int i = mine.X - 1; i <= mine.X+1; i++)
             {
@@ -209,13 +208,13 @@
             }
         }
 
-        private static void ExplodeThree(char[,] field, GetMoveInput mine)
+        private static void ExplodeThree(char[,] field, Position2D mine)
         {
             ExplodeTwo(field, mine);
-            GetMoveInput up = new GetMoveInput(mine.X - 2, mine.Y);
-            GetMoveInput down = new GetMoveInput(mine.X + 2, mine.Y);
-            GetMoveInput left = new GetMoveInput(mine.X, mine.Y - 2);
-            GetMoveInput right = new GetMoveInput(mine.X, mine.Y + 2);
+            Position2D up = new Position2D(mine.X - 2, mine.Y);
+            Position2D down = new Position2D(mine.X + 2, mine.Y);
+            Position2D left = new Position2D(mine.X, mine.Y - 2);
+            Position2D right = new Position2D(mine.X, mine.Y + 2);
 
             if (CheckField(field, up.X, up.Y))
             {
@@ -238,7 +237,7 @@
             }
         }
 
-        private static void ExplodeFour(char[,] field, GetMoveInput mine)
+        private static void ExplodeFour(char[,] field, Position2D mine)
         {
             for (int i = mine.X - 2; i <= mine.X + 2; i++)
             {
@@ -263,7 +262,7 @@
 
         }
 
-        private static void ExplodeFive(char[,] field, GetMoveInput mine)
+        private static void ExplodeFive(char[,] field, Position2D mine)
         {
             for (int i = mine.X - 2; i <= mine.X + 2; i++)
             {
@@ -289,30 +288,36 @@
         {
             Console.Write("   ");
             int size = field.GetLength(0);
+            
             for (int i = 0; i < size; i++)
             {
                 Console.Write("{0} ", i);
             }
+
             Console.WriteLine();
             Console.Write("   ");
+            
             for (int i = 0; i < size*2; i++)
             {
                 Console.Write("-");
             }
+            
             Console.WriteLine();
 
             for (int i = 0; i < size; i++)
             {
                 Console.Write("{0} |", i);
+            
                 for (int j = 0; j < size; j++)
                 {
                     Console.Write("{0} ", field[i,j]);
                 }
+                
                 Console.WriteLine();
             }
         }
 
-        public static GetMoveInput ExtractMineFromString(string line)
+        public static Position2D ExtractMineFromString(string line)
         {
             if (line == null || line.Length < 3 || !line.Contains(" "))
             {
@@ -337,7 +342,7 @@
                 return null;
             }
 
-            return new GetMoveInput(x, y);
+            return new Position2D(x, y);
         }
         #endregion
     }

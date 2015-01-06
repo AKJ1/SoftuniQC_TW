@@ -16,24 +16,27 @@
         {
             string readBuffer = Console.ReadLine();
             int size = 0;
+
             while (!int.TryParse(readBuffer, out size))
             {
                 Console.WriteLine("Wrong Format or number out of range.");
                 Console.Write("Input battlefield size: [Range: 1 to 10] n = ");
                 readBuffer = Console.ReadLine();
             }
+            
             if ((size > 10 || size <= 0))
             {
                 Console.Write("Number out of bounds. Enter a new one [from 1 to 10] n = ");
                 size = GetInitialInput();
             }
+            
             return size;
         }
 
-        private GetMoveInput GetMoveInput()
+        private Position2D GetMoveInput()
         {
             Console.Write("Please enter coordinates: ");
-            GetMoveInput mine = GameServices.ExtractMineFromString(Console.ReadLine());
+            Position2D mine = GameServices.ExtractMineFromString(Console.ReadLine());
             mine = mine ?? (mine = GetMoveInput());
             return mine;
         }
@@ -54,10 +57,12 @@
         private void GameLoop()
         {
             int blownMines = 0;
+
             while (GameServices.ContainsMines(gameField))
             {
                 GameServices.PrintResults(gameField);
-                GetMoveInput inputMine = GetMoveInput();
+                Position2D inputMine = GetMoveInput();
+
                 if (GameServices.IsValidMove(gameField, inputMine.X, inputMine.Y))
                 {
                     GameServices.Explode(gameField, inputMine);

@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="BattleFieldGame.cs" />
     <Compile Include="GameServices.cs" />
-    <Compile Include="GetMoveInput.cs" />
+    <Compile Include="Position2D.cs" />
     <Compile Include="Battlefield.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
