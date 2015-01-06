@@ -29,13 +29,13 @@
                     field[i, j] = '-';
                 }
             }
-            List<GetMoveInput> mines = new List<GetMoveInput>();
+            List<MineMove> mines = new List<MineMove>();
             for (int i = 0; i < minesCount; i++)
             {
                 int mineX = Rand.Next(0, size);
                 int mineY = Rand.Next(0, size);
                 // you dont need that mine object
-                GetMoveInput newMine = new GetMoveInput(mineX, mineY);
+                MineMove newMine = new MineMove(mineX, mineY);
                 int mineType = Rand.Next('1', '6');
                 field[mineX, mineY] = Convert.ToChar(mineType);
             }
@@ -128,7 +128,7 @@
         /// </summary>
         /// <param name="field">the field</param>
         /// <param name="mine">the mine to explode</param>
-        public static void Explode(char[,] field, GetMoveInput mine)
+        public static void Explode(char[,] field, MineMove mine)
         {
             char mineType = field[mine.X, mine.Y];
 
@@ -162,12 +162,12 @@
             }
         }
 
-        private static void ExplodeOne(char[,] field, GetMoveInput mine)
+        private static void ExplodeOne(char[,] field, MineMove mine)
         {
-            GetMoveInput upperRightCorner = new GetMoveInput(mine.X - 1, mine.Y - 1);
-            GetMoveInput upperLeftCorner = new GetMoveInput(mine.X - 1, mine.Y + 1);
-            GetMoveInput downRightCorner = new GetMoveInput(mine.X + 1, mine.Y - 1);
-            GetMoveInput downLeftCorner = new GetMoveInput(mine.X + 1, mine.Y + 1);
+            MineMove upperRightCorner = new MineMove(mine.X - 1, mine.Y - 1);
+            MineMove upperLeftCorner = new MineMove(mine.X - 1, mine.Y + 1);
+            MineMove downRightCorner = new MineMove(mine.X + 1, mine.Y - 1);
+            MineMove downLeftCorner = new MineMove(mine.X + 1, mine.Y + 1);
 
             if (CheckField(field, mine.X, mine.Y))
             {
@@ -195,7 +195,7 @@
             }
         }
 
-        private static void ExplodeTwo(char[,] field, GetMoveInput mine)
+        private static void ExplodeTwo(char[,] field, MineMove mine)
         {
             for (int i = mine.X - 1; i <= mine.X+1; i++)
             {
@@ -209,13 +209,13 @@
             }
         }
 
-        private static void ExplodeThree(char[,] field, GetMoveInput mine)
+        private static void ExplodeThree(char[,] field, MineMove mine)
         {
             ExplodeTwo(field, mine);
-            GetMoveInput up = new GetMoveInput(mine.X - 2, mine.Y);
-            GetMoveInput down = new GetMoveInput(mine.X + 2, mine.Y);
-            GetMoveInput left = new GetMoveInput(mine.X, mine.Y - 2);
-            GetMoveInput right = new GetMoveInput(mine.X, mine.Y + 2);
+            MineMove up = new MineMove(mine.X - 2, mine.Y);
+            MineMove down = new MineMove(mine.X + 2, mine.Y);
+            MineMove left = new MineMove(mine.X, mine.Y - 2);
+            MineMove right = new MineMove(mine.X, mine.Y + 2);
 
             if (CheckField(field, up.X, up.Y))
             {
@@ -238,7 +238,7 @@
             }
         }
 
-        private static void ExplodeFour(char[,] field, GetMoveInput mine)
+        private static void ExplodeFour(char[,] field, MineMove mine)
         {
             for (int i = mine.X - 2; i <= mine.X + 2; i++)
             {
@@ -263,7 +263,7 @@
 
         }
 
-        private static void ExplodeFive(char[,] field, GetMoveInput mine)
+        private static void ExplodeFive(char[,] field, MineMove mine)
         {
             for (int i = mine.X - 2; i <= mine.X + 2; i++)
             {
@@ -312,7 +312,7 @@
             }
         }
 
-        public static GetMoveInput ExtractMineFromString(string line)
+        public static MineMove ExtractMineFromString(string line)
         {
             if (line == null || line.Length < 3 || !line.Contains(" "))
             {
@@ -337,7 +337,7 @@
                 return null;
             }
 
-            return new GetMoveInput(x, y);
+            return new MineMove(x, y);
         }
         #endregion
     }
